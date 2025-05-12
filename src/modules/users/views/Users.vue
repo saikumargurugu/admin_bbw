@@ -1,37 +1,47 @@
 <template>
-    <div>
-      <h1 class="text-2xl font-bold mb-4">User Management</h1>
-      <table class="w-full border">
-        <thead>
-          <tr class="bg-gray-100">
-            <th class="p-2 border">Name</th>
-            <th class="p-2 border">Email</th>
-            <th class="p-2 border">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users" :key="user.id">
-            <td class="p-2 border">{{ user.name }}</td>
-            <td class="p-2 border">{{ user.email }}</td>
-            <td class="p-2 border">
-              <button class="text-blue-500">Edit</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        users: [
-          { id: 1, name: 'John Doe', email: 'john@example.com' },
-          { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-        ],
-      }
-    },
-  }
-  </script>
-  
+  <div>
+    <!-- <HeroSection title="Users" description="Manage all registered users" /> -->
+
+    <ListView
+      :items="users"
+      :columns="columns"
+      :onCreate="goToCreate"
+      :linkResolver="linkResolver"
+    />
+  </div>
+</template>
+
+<script setup>
+import HeroSection from '@/components/ui/HeroSection.vue';
+import ListView from '@/components/ui/ListView.vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const users = ref([
+  { id: 1, name: 'Alice Johnson', email: 'alice@example.com', phone: '04515343546', address : '25 Dunsstable st', plan:'full' },
+  { id: 2, name: 'Bob Smith', email: 'bob@example.com', phone: '04515343546', address : '25 Dunsstable st', plan:'full' },
+  { id: 3, name: 'Carol White', email: 'carol@example.com', phone: '04515343546', address : '25 Dunsstable st', plan:'full' },
+]);
+
+const columns = [
+  { label: 'ID', key: 'id' },
+  { label: 'Name', key: 'name' },
+  { label: 'Email', key: 'email' },
+  { label: 'Phone', key: 'phone' },
+  { label: 'Address', key: 'address' },
+  { label: 'Plan', key: 'plan' },
+];
+
+function goToCreate() {
+  router.push('/users/create');
+}
+
+function linkResolver(user) {
+  return `/users/${user.id}`;
+}
+</script>
+
+<style scoped>
+/* Optional additional styling */
+</style>
