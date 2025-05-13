@@ -1,17 +1,18 @@
 <template>
   <div class="create-user-page">
-    <!-- Hero Section at the top -->
+    <!-- Hero Section -->
     <HeroSection 
       title="Create User" 
       description="Fill out the details below to add a new user." 
     />
 
-    <!-- Form Card Container -->
+    <!-- User Form -->
     <div class="user-form">
       <div class="form-header">
         <h2>New User Information</h2>
         <p>Enter all required details to create a new account.</p>
       </div>
+
       <FormBuilder
         :config="formConfig"
         :initialValues="{}"
@@ -23,20 +24,16 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import HeroSection from '@/components/ui/HeroSection.vue'
 import FormBuilder from '@/components/ui/FormBuilder.vue'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
-const users = ref([
-  { id: 1, first_name: 'John', last_name: 'Doe', email: 'john@example.com', dob: '1990-01-01', phone: '1234567890' },
-  { id: 2, first_name: 'Jane', last_name: 'Smith', email: 'jane@example.com', dob: '1992-02-02', phone: '9876543210' },
-])
+const router = useRouter()
 
-function handleSubmit(newUser) {
-  newUser.id = users.value.length + 1
-  users.value.push(newUser)
-  // Optionally, you could navigate using router.push here, if needed.
+function handleSubmit(userData) {
+  console.log('User Submitted:', userData)
+  alert('User created successfully!')
+  router.push('/users') // Navigate to the user list page after creation
 }
 
 const formConfig = [
@@ -74,7 +71,6 @@ const formConfig = [
 </script>
 
 <style scoped>
-/* Full page background with a subtle gradient */
 .create-user-page {
   display: flex;
   flex-direction: column;
@@ -84,7 +80,6 @@ const formConfig = [
   padding: 2rem 5%;
 }
 
-/* Card-style container for the form */
 .user-form {
   margin-top: 3rem;
   padding: 2.5rem;
@@ -92,10 +87,9 @@ const formConfig = [
   border-radius: 12px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
 }
 
-/* Header styling for the form card */
 .form-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -112,14 +106,18 @@ const formConfig = [
   color: #666;
 }
 
-/* If the FormBuilder renders a form, style it as a grid */
 :deep(form) {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 2rem;
 }
 
-/* Style input labels so they are visible */
+@media (max-width: 768px) {
+  :deep(form) {
+    grid-template-columns: 1fr;
+  }
+}
+
 :deep(.input-label) {
   display: block;
   font-size: 1rem;
@@ -127,18 +125,15 @@ const formConfig = [
   color: #333;
   margin-bottom: 0.5rem;
 }
-
-/* Style the input fields */
 :deep(.input-control) {
   width: 100%;
-  padding: 1rem;
-  font-size: 1.25rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 6px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;     /* ← added spacing */
 }
 
-/* Style the submit button to span full width of the form grid */
 :deep(button[type="submit"]) {
   grid-column: 1 / -1;
   background-color: #2563eb;

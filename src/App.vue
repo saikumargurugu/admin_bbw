@@ -2,18 +2,19 @@
   <div class="app-wrapper">
     <!-- Navbar at the top -->
     <Navbar @toggleSidebar="toggleSidebar" />
-
+<div class="app-container">
     <!-- Sidebar (positioned to slide in/out); remains fixed -->
     <Sidebar :isOpen="sidebarOpen" @toggle="toggleSidebar" />
 
     <!-- Main content area that fills the screen with 5% padding.
          When the sidebar is open, it shifts to the right -->
-    <div class="main-content" :class="{ 'content-shift': sidebarOpen }">
+    <div class="main-content" :class="{ 'content-shift': sidebarOpen }" >
       <!-- Card-style container wrapping the routed content (i.e. your create form) -->
       <div class="content-container">
         <router-view />
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -35,6 +36,12 @@ function toggleSidebar() {
   flex-direction: column;
   height: 100vh;       /* Full viewport height */
   padding-top: 60px;   /* Space for the navbar */
+}
+
+.app-container{
+ display: flex;
+ width: 100%;
+ flex-direction: row;
 }
 
 /* Main content fills remaining space with 5% padding and a gentle gradient background.

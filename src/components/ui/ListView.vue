@@ -110,6 +110,7 @@
   
   <style scoped>
   .list-view {
+    width: 100%;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
