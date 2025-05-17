@@ -4,8 +4,16 @@ import App from './App.vue'
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import router from './router'
+import '@mdi/font/css/materialdesignicons.css'
+
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+
 
 const vuetify = createVuetify({
+    components,
+    directives,
   theme: {
     defaultTheme: 'light',
     themes: {
@@ -24,7 +32,4 @@ const vuetify = createVuetify({
   },
 })
 
-const app = createApp(App)
-app.use(router)
-app.use(vuetify)
-app.mount('#app')
+const app = createApp(App).use(router).use(vuetify).mount('#app')

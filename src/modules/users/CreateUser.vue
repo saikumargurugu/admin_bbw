@@ -1,16 +1,11 @@
 <template>
   <v-container fluid class="create-user-page">
-    <!-- Hero Section -->
     <v-row justify="center">
       <v-col cols="12" md="10">
-        <HeroSection 
-          title="Create User" 
-          description="Fill out the details below to add a new user." 
-        />
+        <HeroSection title="Create User" description="Fill out the details below to add a new user." />
       </v-col>
     </v-row>
 
-    <!-- User Form Card -->
     <v-row justify="center">
       <v-col cols="12" md="8">
         <div class="user-form">
@@ -18,12 +13,7 @@
             <h2>New User Information</h2>
             <p>Enter all required details to create a new account.</p>
           </div>
-          <FormBuilder
-            :config="formConfig"
-            :initialValues="{}"
-            submitLabel="Create"
-            @submit="handleSubmit"
-          />
+          <FormBuilder :config="formConfig" :initialValues="{}" submitLabel="Create" @submit="handleSubmit" />
         </div>
       </v-col>
     </v-row>
@@ -31,143 +21,220 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-import HeroSection from '@/components/ui/HeroSection.vue'
-import FormBuilder from '@/components/ui/FormBuilder.vue'
+import { useRouter } from 'vue-router';
+import HeroSection from '@/components/ui/HeroSection.vue';
+import FormBuilder from '@/components/ui/FormBuilder.vue';
 
-const router = useRouter()
+const router = useRouter();
 
 function handleSubmit(userData) {
-  console.log('User Submitted:', userData)
-  alert('User created successfully!')
-  router.push('/users') // Navigate to the user list page after creation
+  // Assuming FormBuilder has already validated the form
+  console.log('User Submitted:', userData);
+  alert('User created successfully!'); // Replace with a more robust notification if desired
+  router.push('/users'); // Navigate to the user list page after creation
 }
 
-// Form field configuration including a select dropdown for gender
+// Form field configuration
+// Validations are primarily driven by the 'required' flag and the 'rules' array.
+// Ensure InputField.vue correctly processes these from the config.
 const formConfig = [
   {
     name: 'first_name',
     label: 'First Name',
     type: 'text',
-    attrs: { placeholder: 'Enter first name', required: true },
+    required: true,
+    rules: [(v) => !!v || 'First name is required'],
+    attrs: { placeholder: 'Enter first name' },
   },
   {
     name: 'last_name',
     label: 'Last Name',
     type: 'text',
-    attrs: { placeholder: 'Enter last name', required: true },
+    required: true,
+    rules: [(v) => !!v || 'Last name is required'],
+    attrs: { placeholder: 'Enter last name' },
   },
   {
     name: 'email',
     label: 'Email',
-    type: 'email',
-    attrs: { placeholder: 'Enter email', required: true },
+    type: 'email', // InputField can use this type for specific email input or keep it as 'text' with email rules
+    required: true,
+    rules: [
+      (v) => !!v || 'Email is required',
+      (v) => /.+@.+\..+/.test(v) || 'Enter a valid email address',
+    ],
+    attrs: { placeholder: 'Enter email' },
   },
   {
     name: 'dob',
     label: 'Date of Birth',
     type: 'date',
-    attrs: { required: true },
+    required: true,
+    // Rules for the date text field (e.g., required)
+    // Min/max are handled by v-date-picker attributes
+    rules: [(v) => !!v || 'Date of birth is required'],
+    attrs: {
+      min: '1900-01-01', // Example: v-date-picker will use this
+      // max: '2025-05-17', // Example: v-date-picker will use this (current date or future)
+    },
   },
   {
     name: 'phone',
     label: 'Phone',
-    type: 'text',
-    attrs: { placeholder: 'Enter phone number', required: true },
+    type: 'text', // Consider type 'tel' for semantic HTML and mobile keyboards
+    required: true,
+    rules: [
+        (v) => !!v || 'Phone number is required',
+        // Example: (v) => /^[0-9]{10}$/.test(v) || 'Phone number must be 10 digits'
+    ],
+    attrs: { placeholder: 'Enter phone number' },
   },
   {
-    name: 'gender',
-    label: 'Gender',
+    name: 'gender_select',
+    label: 'Gender', // Simplified label
     type: 'select',
     options: [
       { label: 'Male', value: 'male' },
       { label: 'Female', value: 'female' },
-      { label: 'Other', value: 'other' }
+      { label: 'Other', value: 'other' },
     ],
-    attrs: { required: true }
+    required: true,
+    rules: [(v) => !!v || 'Please select your gender'],
+    attrs: {},
   },
-]
+  {
+    name: 'is_staff',
+    label: 'Is Staff Member?',
+    type: 'radio',
+    required: true,
+    rules: [(v) => v !== null && v !== undefined || 'Please select an option for staff status'], // Radio value can be boolean or string
+    options: [
+      { label: 'Yes', value: true }, // Using boolean values
+      { label: 'No', value: false },
+    ],
+    attrs: {},
+  },
+  {
+    name: 'can_access',
+    label: 'Grant Access To',
+    type: 'checkbox-group',
+    required: true,
+    rules: [(v) => (Array.isArray(v) && v.length > 0) || 'Please select at least one access area'],
+    options: [
+      { label: 'Club Portal', value: 'club_portal' }, // Using more descriptive values
+      { label: 'Membership System', value: 'membership_system' },
+      { label: 'Social Media Tools', value: 'social_tools' },
+      { label: 'Academy Resources', value: 'academy_resources' },
+    ],
+    attrs: {},
+  },
+];
 </script>
 
 <style scoped>
 .create-user-page {
   background: linear-gradient(135deg, #e0eafc, #cfdef3);
   min-height: 100vh;
-  padding: 2rem 0; /* Vertical padding; horizontal spacing is handled by v-container/v-row */
+  padding: 2rem 0;
 }
 
-/* Card-style container for the form */
 .user-form {
   background: #fff;
-  padding: 2.5rem;
+  padding: 2rem; /* Reduced padding slightly */
   border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12); /* Adjusted shadow */
 }
 
-/* Header styling for the form card */
 .form-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem; /* Reduced margin */
 }
 
 .form-header h2 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.8rem; /* Adjusted font size */
+  margin-bottom: 0.4rem;
   color: #333;
 }
 
 .form-header p {
-  font-size: 1.125rem;
-  color: #666;
+  font-size: 1rem; /* Adjusted font size */
+  color: #555; /* Slightly darker for better readability */
 }
 
-/* Style for the form generated by FormBuilder */
+/*
+  Styles for the form generated by FormBuilder.
+  The :deep selector is used to pierce the scoped styles of child components.
+*/
 :deep(form) {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem 2rem;
+  /* Adjust grid layout for different screen sizes if needed beyond 2 columns */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* More responsive columns */
+  gap: 1rem 1.5rem; /* Reduced gap between fields (row-gap column-gap) */
 }
 
-/* Responsiveness: switch to a single column on smaller screens */
-@media (max-width: 768px) {
-  :deep(form) {
-    grid-template-columns: 1fr;
+/*
+  Ensure InputField.vue's main wrapper (.input-field) also has its margin-bottom reduced.
+  For example, in InputField.vue:
+  .input-field {
+    width: 100%;
+    margin-bottom: 1rem; // Reduced from 2rem
   }
-}
+*/
 
-/* Deep style for input labels (if needed within FormBuilder) */
-:deep(.input-label) {
-  display: block;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
+/*
+  The :deep(.input-control) style was very generic.
+  It's better to let Vuetify components handle their own padding and borders.
+  The primary spacing between fields should come from the grid `gap`
+  and the `margin-bottom` of the `InputField`'s wrapper.
+  If you need to override Vuetify component styles, be more specific.
+*/
+/* Example: If InputField has a wrapper div with class .input-field-wrapper */
+:deep(.input-field) { /* Assuming .input-field is the root of InputField.vue */
+  margin-bottom: 0; /* Grid gap will handle vertical spacing between rows of fields */
 }
-
-/* Deep style for input controls (if using custom inputs inside FormBuilder) */
-:deep(.input-control) {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 1.5rem;
+/* If your InputField.vue has this style, it needs to be adjusted or removed if grid gap is sufficient:
+.input-field {
+  margin-bottom: 1rem; // Or even less if grid-gap is preferred for vertical spacing
 }
+*/
 
-/* Submit button styling taking full grid width */
+
+/* Submit button styling */
 :deep(button[type="submit"]) {
-  grid-column: 1 / -1;
+  grid-column: 1 / -1; /* Make button span all columns */
   background-color: #2563eb;
   color: #fff;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.8rem 1.5rem; /* Adjusted padding */
   border-radius: 6px;
-  font-size: 1.125rem;
+  font-size: 1rem; /* Adjusted font size */
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 1rem; /* Add some space above the button */
 }
 
 :deep(button[type="submit"]:hover) {
   background-color: #1d4ed8;
+}
+
+/* Mobile Responsiveness:
+   The grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+   already provides good responsiveness by switching to a single column
+   when the width is insufficient for two columns of min 250px.
+*/
+@media (max-width: 576px) { /* More specific breakpoint for single column if needed */
+  :deep(form) {
+    grid-template-columns: 1fr; /* Ensure single column on very small screens */
+    gap: 1rem 0; /* Adjust gap for single column */
+  }
+  .user-form {
+    padding: 1.5rem; /* Reduce padding on small screens */
+  }
+  .form-header h2 {
+    font-size: 1.6rem;
+  }
+  .form-header p {
+    font-size: 0.9rem;
+  }
 }
 </style>
