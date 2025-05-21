@@ -79,13 +79,12 @@
   
   .input-field {
     width: 100%;
-    background-color: rgb(0, 0, 0);
     border-radius: 8px;
   }
   
   .input-field input {
     color: black !important; /* force visible text */
-    caret-color: black !important;
+    /* caret-color: black !important; */
     /* background-color: white !important; */
   }
   

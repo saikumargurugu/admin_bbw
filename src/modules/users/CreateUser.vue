@@ -203,7 +203,7 @@ const formConfig = [
 :deep(button[type="submit"]) {
   grid-column: 1 / -1; /* Make button span all columns */
   background-color: #2563eb;
-  color: #fff;
+  color: #000000;
   border: none;
   padding: 0.8rem 1.5rem; /* Adjusted padding */
   border-radius: 6px;

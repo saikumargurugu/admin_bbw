@@ -139,6 +139,6 @@ watch(
 <style scoped>
 .input-field {
   width: 100%;
-  margin-bottom: 2rem;
+  color: black;
 }
 </style>
