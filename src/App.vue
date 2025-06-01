@@ -1,4 +1,6 @@
 <template>
+    <v-theme-provider theme="light">
+
   <div class="app-wrapper">
     <!-- Navbar at the top -->
     <Navbar @toggleSidebar="toggleSidebar" />
@@ -16,6 +18,7 @@
     </div>
   </div>
   </div>
+  </v-theme-provider>
 </template>
 
 <script setup>
@@ -82,7 +85,7 @@ function toggleSidebar() {
   padding: 1rem;
   font-size: 1.25rem;
   margin-bottom: 1.5rem;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
   border-radius: 6px;
 }
 
