@@ -16,11 +16,10 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
 import Sidebar from '@/components/Sidebar.vue';
 
 const sidebarOpen = ref(false);
-function toggleSidebar() {
-  sidebarOpen.value = !sidebarOpen.value;
-}
+const route = useRoute();
 </script>

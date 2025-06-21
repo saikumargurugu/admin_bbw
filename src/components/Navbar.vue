@@ -6,7 +6,7 @@
         @click="$emit('toggleSidebar')"
         aria-label="Toggle sidebar"
       >☰</button>
-      <span class="text-xl font-bold">My App</span>
+      <span class="text-xl font-bold">BBW Admin</span>
     </div>
   </nav>
 </template>
