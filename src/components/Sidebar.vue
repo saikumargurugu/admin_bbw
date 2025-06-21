@@ -1,13 +1,22 @@
 <template>
-  <div :class="['sidebar', { open: isOpen }]">
-    <button @click="$emit('toggle')" class="close-btn">×</button>
-    <nav>
-      <router-link to="/" class="nav-link">Dashboard</router-link>
-      <router-link to="/users" class="nav-link">Users</router-link>
-      <router-link to="/organisations" class="nav-link">Organisations</router-link>
-      <router-link to="/settings" class="nav-link">Settings</router-link>
-    </nav>
-  </div>
+  <transition name="slide">
+    <aside
+      v-if="isOpen"
+      class="fixed top-0 left-0 h-full w-90 bg-[#2c3e50] text-white z-50 shadow-lg flex flex-col p-5"
+    >
+      <button
+        @click="$emit('toggle')"
+        class="self-end bg-transparent border-none text-2xl text-white cursor-pointer mb-6"
+        aria-label="Close sidebar"
+      >×</button>
+      <nav class="flex flex-col gap-2">
+        <router-link to="/" class="block py-2 px-3 rounded hover:bg-[#34495e] transition">Dashboard</router-link>
+        <router-link to="/users" class="block py-2 px-3 rounded hover:bg-[#34495e] transition">Users</router-link>
+        <router-link to="/organisations" class="block py-2 px-3 rounded hover:bg-[#34495e] transition">Organisations</router-link>
+        <router-link to="/settings" class="block py-2 px-3 rounded hover:bg-[#34495e] transition">Settings</router-link>
+      </nav>
+    </aside>
+  </transition>
 </template>
 
 <script>
@@ -19,39 +28,12 @@ export default {
 </script>
 
 <style scoped>
-.sidebar {
-  position: fixed;       /* Ensure the sidebar is fixed in place */
-  top: 0;                /* Align it to the top of the viewport */
-  left: -250px;          /* Start off-canvas */
-  width: 250px;
-  height: 100%;
-  background: #2c3e50;
-  color: white;
-  transition: left 0.3s ease-in-out;
-  padding: 20px;         /* Optional: adds inner spacing */
-  z-index: 90;
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s;
 }
-
-.sidebar.open {
-  left: 0;               /* When open, slide it to the left edge of the viewport */
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-}
-
-.nav-link {
-  display: block;
-  margin: 10px 0;
-  color: white;
-  text-decoration: none;
-}
-
-.nav-link:hover {
-  text-decoration: underline;
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
 }
 </style>

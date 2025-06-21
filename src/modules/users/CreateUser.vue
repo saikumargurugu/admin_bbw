@@ -29,7 +29,6 @@ const router = useRouter();
 
 function handleSubmit(userData) {
   // Assuming FormBuilder has already validated the form
-  console.log('User Submitted:', userData);
   alert('User created successfully!'); // Replace with a more robust notification if desired
   router.push('/users'); // Navigate to the user list page after creation
 }
