@@ -1,5 +1,5 @@
 <template>
-  <div class="input-field">
+  <div class="w-full text-black">
     <DateInput
       v-if="isDate"
       :config="config"
@@ -67,7 +67,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-// Updated computed property to handle checkbox-group default value:
 const localValue = computed({
   get() {
     if (props.config.type === 'checkbox-group' && !Array.isArray(props.modelValue)) {
@@ -81,7 +80,6 @@ const localValue = computed({
 const rules = ref([])
 const dateRules = ref([])
 
-// Determine which input type to render based on config
 const isTextarea = computed(() => props.config.type === 'textarea')
 const isSelect = computed(() => props.config.type === 'select')
 const isDate = computed(() => props.config.type === 'date')
