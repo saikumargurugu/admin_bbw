@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia';
 import './assets/tailwind.css' 
 import './style.css'
 import App from './App.vue'
@@ -32,5 +33,6 @@ const vuetify = createVuetify({
     },
   },
 })
+const pinia = createPinia();
 
-const app = createApp(App).use(router).use(vuetify).mount('#app')
+const app = createApp(App).use(router).use(pinia).use(vuetify).mount('#app')
