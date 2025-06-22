@@ -18,7 +18,8 @@
       />
       <button
         type="submit"
-        class="bg-blue-600 text-white px-6 py-3 rounded shadow hover:bg-blue-700"
+        style="background-color: #2563eb; color: #fff;"
+        class="px-6 py-3 rounded shadow"
       >
         Sign in
       </button>

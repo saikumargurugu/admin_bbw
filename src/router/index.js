@@ -1,35 +1,51 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
 import { auth } from '@/firebase';
-import Dashboard from '@/modules/dashboard/views/Dashboard.vue';
-import Users from '@/modules/users/views/Users.vue';
-import CreateUser from '@/modules/users/CreateUser.vue';
-import Settings from '@/modules/settings/views/Settings.vue';
-import Login from '../views/Login.vue';
-const routes = [
-  { path: '/', component: Dashboard },
-  { path: '/users', component: Users },
-  { path: '/users/create', component: CreateUser },
-  { path: '/settings', component: Settings },
-  { path: '/login', component: Login},
-];
+import { appRoutes } from './routes';
+
+// Helper to flatten routes and subRouutes
+export const flattenRoutes = (routes) =>{
+  const flat = [];
+  routes.forEach(route => {
+    const { subRouutes, ...mainRoute } = route;
+    flat.push(mainRoute);
+    if (Array.isArray(subRouutes)) {
+      subRouutes.forEach(sub => flat.push(sub));
+    }
+  });
+  return flat;
+}
+
+const routes = flattenRoutes(appRoutes);
+
+function waitForFirebaseAuth() {
+  return new Promise((resolve) => {
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      unsubscribe();
+      resolve();
+    });
+  });
+}
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const user = auth.currentUser;
-  if (!user) {
-    // Not logged in, redirect to login page
-    if (to.path !== '/login') {
-      return next('/login');
-    }
-    return next();
+router.beforeEach(async (to, from, next) => {
+  await waitForFirebaseAuth();
+
+  const isLoggedIn = localStorage.getItem('is_userlogged');
+  const accessToken = localStorage.getItem('admin_access_token');
+  const firebaseUser = auth.currentUser;
+
+  if ((!isLoggedIn || !accessToken || !firebaseUser) && to.path !== '/login') {
+    return next('/login');
   }
-  // Logged in, proceed
+  if (isLoggedIn && accessToken && firebaseUser && to.path === '/login') {
+    return next('/');
+  }
   next();
 });
 
-export default router; // <- This is essential!
+export default router;

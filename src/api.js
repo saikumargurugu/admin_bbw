@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api/admin-ui/',
+  baseURL: BASE_URL+'/admin-ui/',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -10,7 +11,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('admin_access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -21,7 +22,7 @@ let isRefreshing = false;
 let failedQueue = [];
 
 function processQueue(error, token = null) {
-  failedQueue.forEach(prom => {
+  failedQueue?.forEach(prom => {
     if (error) {
       prom.reject(error);
     } else {
@@ -49,12 +50,13 @@ api.interceptors.response.use(
 
       originalRequest._retry = true;
       isRefreshing = true;
-      const refreshToken = localStorage.getItem('refresh_token');
+      const refreshToken = localStorage.getItem('admin_refresh_token');
       try {
-        const res = await axios.post('/auth/token/refresh/', { refresh_token: refreshToken });
-        localStorage.setItem('access_token', res.data.access_token);
-        processQueue(null, res.data.access_token);
-        originalRequest.headers['Authorization'] = 'Bearer ' + res.data.access_token;
+        const res = await axios.post(BASE_URL + '/admin-ui/auth/token/refresh/', { refresh_token: refreshToken });
+
+        localStorage.setItem('admin_access_token', res.data.access);
+        processQueue(null, res.data.access);
+        originalRequest.headers['Authorization'] = 'Bearer ' + res.data.access;
         return api(originalRequest);
       } catch (err) {
         processQueue(err, null);
