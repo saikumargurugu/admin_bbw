@@ -52,7 +52,7 @@ api.interceptors.response.use(
       isRefreshing = true;
       const refreshToken = localStorage.getItem('admin_refresh_token');
       try {
-        const res = await axios.post(BASE_URL + '/admin-ui/auth/token/refresh/', { refresh_token: refreshToken });
+        const res = await axios.post(BASE_URL + '/admin-ui/auth/token/refresh/', { refresh: refreshToken });
 
         localStorage.setItem('admin_access_token', res.data.access);
         processQueue(null, res.data.access);
