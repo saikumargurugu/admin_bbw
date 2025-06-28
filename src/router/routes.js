@@ -6,6 +6,7 @@ import Login from '@/views/Login.vue';
 import Products from '../modules/products/views/Products.vue';
 import ProductCreate from '../modules/products/Createproducts.vue';
 import ProductDetails from '../modules/products/views/ProductDetails.vue';
+import ProductEdit from '../modules/products/views/ProductEdit.vue';
 
 export const appRoutes = [
   {
@@ -51,7 +52,7 @@ export const appRoutes = [
           },
           {
             path: '/products/:id/edit',
-            component: Products,
+            component: ProductEdit,
             label: 'Product Edit'
           },
           {
